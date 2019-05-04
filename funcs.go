@@ -84,9 +84,15 @@ func Success(msg string, args ...interface{}) Status {
 	})
 }
 
-func Fail(args *Args) Status {
-	args.Success = false
-	return NewStatus(args)
+func Fail(args ...*Args) Status {
+	var _args *Args
+	if len(args) == 0 || args[0] == nil {
+		_args = &Args{}
+	} else {
+		_args = args[0]
+	}
+	_args.Success = false
+	return NewStatus(_args)
 }
 
 func YourBad(msg string, args ...interface{}) Status {

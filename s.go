@@ -3,12 +3,14 @@ package status
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gearboxworks/go-status/only"
 )
 
 var _ Status = (*S)(nil)
 
 type S struct {
 	success    bool
+	warn       bool
 	cause      error
 	httpstatus int
 	message    string
@@ -16,6 +18,27 @@ type S struct {
 	data       interface{}
 	help       HelpTypeMap
 	errorcode  int
+}
+
+func (me *S) IsWarning() bool {
+	return me.warn
+}
+
+func (me *S) Warning() (w string) {
+	for range only.Once {
+		w = ""
+		if !me.warn {
+			break
+		}
+		w = me.message
+	}
+	return w
+}
+
+func (me *S) SetWarning(bool) Status {
+	me.success = true
+	me.warn = true
+	return me
 }
 
 func (me *S) Json() []byte {

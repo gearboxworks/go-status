@@ -8,6 +8,7 @@ type jsonS struct {
 
 type Status interface {
 	IsSuccess() bool
+	IsWarning() bool
 	IsError() bool
 	Error() string
 	Data() interface{}
@@ -16,6 +17,7 @@ type Status interface {
 	GetHelp(HelpType) string
 	HttpStatus() int
 	Message() string
+	Warning() string
 	Cause() error
 	FullError() error
 	ErrorCode() int
@@ -23,6 +25,7 @@ type Status interface {
 	SetDetail(string, ...interface{}) Status
 	SetCause(error) Status
 	SetSuccess(bool) Status
+	SetWarning(bool) Status
 	SetMessage(string, ...interface{}) Status
 	SetHttpStatus(int) Status
 	SetHelp(HelpType, string, ...interface{}) Status
@@ -33,6 +36,7 @@ type Status interface {
 
 type Args struct {
 	Success    bool
+	Warning    bool
 	Help       string
 	ApiHelp    string
 	CliHelp    string

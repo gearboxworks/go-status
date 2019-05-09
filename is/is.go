@@ -14,3 +14,6 @@ func Error(sts Status) bool {
 func Success(sts Status) bool {
 	return sts == nil || status.IsSuccess(sts)
 }
+func Warn(sts Status) bool {
+	return sts != nil && sts.IsWarning()
+}

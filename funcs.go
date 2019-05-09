@@ -95,6 +95,10 @@ func Fail(args ...*Args) Status {
 	return NewStatus(_args)
 }
 
+func Warn(msg string, args ...interface{}) Status {
+	return Success(msg, args).SetWarning(true)
+}
+
 func YourBad(msg string, args ...interface{}) Status {
 	return Fail(&Args{
 		Message:    fmt.Sprintf(msg, args...),

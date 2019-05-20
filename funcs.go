@@ -96,7 +96,7 @@ func Fail(args ...*Args) Status {
 }
 
 func Warn(msg string, args ...interface{}) Status {
-	return Success(msg, args).SetWarning(true)
+	return Success(msg, args...).SetWarning(true)
 }
 
 func YourBad(msg string, args ...interface{}) Status {

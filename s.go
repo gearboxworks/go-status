@@ -21,6 +21,7 @@ type S struct {
 	data       interface{}
 	help       HelpTypeMap
 	errorcode  int
+	logto      int
 }
 
 func (me *S) GetFullDetails() (fd string) {
@@ -51,8 +52,23 @@ func (me *S) Log() {
 		if me == nil {
 			break
 		}
-		if IsError(me) {
+		if me.logto == FatalLog {
 			Logger.Fatal(me.Message())
+		}
+		if me.logto == ErrorLog {
+			Logger.Error(me.Message())
+			break
+		}
+		if me.logto == WarnLog {
+			Logger.Warn(me.Message())
+			break
+		}
+		if me.logto == DebugLog {
+			Logger.Debug(me.Message())
+			break
+		}
+		if IsError(me) {
+			Logger.Error(me.Message())
 			break
 		}
 		if IsWarn(me) {
@@ -106,6 +122,10 @@ func (me *S) IsSuccess() bool {
 
 func (me *S) IsError() bool {
 	return !me.success
+}
+
+func (me *S) LogTo() int {
+	return me.logto
 }
 
 func (me *S) Cause() error {
@@ -171,6 +191,11 @@ func (me *S) FullError() (err error) {
 		c = sts.Cause()
 	}
 	return fmt.Errorf(msg)
+}
+
+func (me *S) SetLogTo(logto int) Status {
+	me.logto = logto
+	return me
 }
 
 func (me *S) SetSuccess(success bool) Status {

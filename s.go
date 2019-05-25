@@ -3,10 +3,14 @@ package status
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gearboxworks/go-status/is"
 	"github.com/gearboxworks/go-status/only"
+	"log"
+	"strings"
 )
 
-var _ Status = (*S)(nil)
+var NilS = (*S)(nil)
+var _ Status = NilS
 
 type S struct {
 	success    bool
@@ -14,10 +18,53 @@ type S struct {
 	cause      error
 	httpstatus int
 	message    string
-	details    string
+	additional string
 	data       interface{}
 	help       HelpTypeMap
 	errorcode  int
+}
+
+func (me *S) GetFullDetails() (fd string) {
+	for range only.Once {
+		fd = me.GetFullMessage()
+		if me.additional != "" {
+			fd = fmt.Sprintf("%s; %s", fd, me.additional)
+		}
+		if d, ok := me.data.(string); ok {
+			fd = fmt.Sprintf("%s; %s", fd, d)
+		}
+		if d, ok := me.data.(string); ok {
+			fd = fmt.Sprintf("%s; %s", fd, d)
+		}
+		fh := me.GetFullHelp()
+		if fh != "" {
+			fd = fmt.Sprintf("%s; %s", fd, fh)
+		}
+	}
+	return fd
+}
+
+func (me *S) Log() {
+	if Logger == nil {
+		log.Fatal("status.Logger is nil")
+	}
+	for range only.Once {
+		if is.Error(me) {
+			Logger.Fatal(me.Message())
+			break
+		}
+		if is.Warn(me) {
+			Logger.Warn(me.Message())
+			break
+		}
+		if me == nil {
+			break
+		}
+		if is.Success(me) {
+			Logger.Debug(me.Message())
+			break
+		}
+	}
 }
 
 func (me *S) IsWarning() bool {
@@ -70,8 +117,8 @@ func (me *S) Message() string {
 	return me.message
 }
 
-func (me *S) Detail() string {
-	return me.details
+func (me *S) Additional() string {
+	return me.additional
 }
 
 func (me *S) Help() string {
@@ -88,6 +135,21 @@ func (me *S) HttpStatus() int {
 
 func (me *S) ErrorCode() int {
 	return me.errorcode
+}
+
+func (me *S) GetFullMessage() (fm string) {
+	for range only.Once {
+		fm = me.message
+		if me.cause == nil {
+			break
+		}
+		sts, ok := me.cause.(Status)
+		if !ok {
+			fm = fmt.Sprintf("%s; %s", fm, me.cause.Error())
+		}
+		fm = fmt.Sprintf("%s; %s", fm, sts.GetFullMessage())
+	}
+	return fm
 }
 
 func (me *S) FullError() (err error) {
@@ -122,8 +184,8 @@ func (me *S) SetMessage(msg string, args ...interface{}) Status {
 	return me
 }
 
-func (me *S) SetDetail(details string, args ...interface{}) Status {
-	me.details = fmt.Sprintf(details, args...)
+func (me *S) SetAdditional(details string, args ...interface{}) Status {
+	me.additional = fmt.Sprintf(details, args...)
 	return me
 }
 
@@ -153,6 +215,7 @@ func (me *S) SetOtherHelp(help HelpTypeMap) Status {
 	}
 	return me
 }
+
 func (me *S) SetHelp(helptype HelpType, help string, args ...interface{}) Status {
 	if len(args) > 0 {
 		help = fmt.Sprintf(help, args...)
@@ -166,21 +229,54 @@ func (me *S) SetHelp(helptype HelpType, help string, args ...interface{}) Status
 	return me
 }
 
-func (me *S) GetString() (s string, sts Status) {
-	s, ok := me.Data().(string)
-	if !ok {
-		sts = Fail(&Args{
-			Message: fmt.Sprintf("string expected for Status.Data; contains type '%T' instead",
-				me.data,
-			),
-		})
+func (me *S) SetAllHelp(help string, args ...interface{}) Status {
+	return me.SetHelp(AllHelp, help, args)
+}
+
+func (me *S) SetApiHelp(help string, args ...interface{}) Status {
+	return me.SetHelp(CliHelp, help, args)
+}
+
+func (me *S) SetCliHelp(help string, args ...interface{}) Status {
+	return me.SetHelp(CliHelp, help, args)
+}
+
+func (me *S) GetFullHelp() (h string) {
+	for range only.Once {
+		h = me.GetAllHelp()
+		if h == "" {
+			break
+		}
+		m := make(map[string]bool, 1)
+		m[h] = true
+		for ht, hh := range me.help {
+			if *hh == "" {
+				continue
+			}
+			if _, ok := m[*hh]; ok {
+				continue
+			}
+			h = fmt.Sprintf("%s; [%s] %s", h, strings.ToUpper(string(ht)), *hh)
+		}
 	}
-	return s, sts
+	return h
 }
 
 func (me *S) GetHelp(helptype HelpType) string {
 	h, _ := me.help[helptype]
 	return *h
+}
+
+func (me *S) GetAllHelp() string {
+	return me.GetHelp(AllHelp)
+}
+
+func (me *S) GetApiHelp() string {
+	return me.GetHelp(ApiHelp)
+}
+
+func (me *S) GetCliHelp(helptype HelpType) string {
+	return me.GetHelp(CliHelp)
 }
 
 func (me *S) String() string {

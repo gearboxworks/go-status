@@ -7,31 +7,32 @@ type jsonS struct {
 }
 
 type Status interface {
+	Cause() error
+	Data() interface{}
+	Additional() string
+	Error() string
+	ErrorCode() int
+	FullError() error
+	GetFullDetails() string
+	GetFullMessage() string
+	GetHelp(HelpType) string
+	Help() string
+	HttpStatus() int
+	IsError() bool
 	IsSuccess() bool
 	IsWarning() bool
-	IsError() bool
-	Error() string
-	Data() interface{}
-	Help() string
-	Detail() string
-	GetHelp(HelpType) string
-	HttpStatus() int
 	Message() string
-	Warning() string
-	Cause() error
-	FullError() error
-	ErrorCode() int
-	SetData(interface{}) Status
-	SetDetail(string, ...interface{}) Status
 	SetCause(error) Status
+	SetData(interface{}) Status
+	SetAdditional(string, ...interface{}) Status
+	SetErrorCode(int) Status
+	SetHelp(HelpType, string, ...interface{}) Status
+	SetHttpStatus(int) Status
+	SetMessage(string, ...interface{}) Status
+	SetOtherHelp(HelpTypeMap) Status
 	SetSuccess(bool) Status
 	SetWarning(bool) Status
-	SetMessage(string, ...interface{}) Status
-	SetHttpStatus(int) Status
-	SetHelp(HelpType, string, ...interface{}) Status
-	SetOtherHelp(HelpTypeMap) Status
-	SetErrorCode(int) Status
-	GetString() (string, Status)
+	Warning() string
 }
 
 type Args struct {
@@ -49,4 +50,13 @@ type Args struct {
 
 type SuccessInspector interface {
 	IsSuccess() bool
+}
+
+type (
+	Msg = string
+)
+type MsgLogger interface {
+	Debug(Msg)
+	Warn(Msg)
+	Fatal(Msg)
 }

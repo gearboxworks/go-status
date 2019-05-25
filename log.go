@@ -22,7 +22,10 @@ func (me *L) Debug(msg Msg) {
 func (me *L) Warn(msg Msg) {
 	fmt.Printf("[WARN] %s", msg)
 }
+func (me *L) Error(msg Msg) {
+	fmt.Printf("[ERROR] %s", msg)
+}
 func (me *L) Fatal(msg Msg) {
-	fmt.Printf("[FAIL] %s", msg)
+	fmt.Printf("[FATAL] %s", msg)
 	os.Exit(1)
 }

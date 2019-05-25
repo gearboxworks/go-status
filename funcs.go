@@ -7,6 +7,20 @@ import (
 	"net/http"
 )
 
+func Log(err error) {
+	for range only.Once {
+		if err == nil {
+			break
+		}
+		sts, ok := err.(Status)
+		if !ok {
+			Logger.Error(err.Error())
+			break
+		}
+		sts.Log()
+	}
+}
+
 func HttpStatus(err error) int {
 	sts, ok := err.(Status)
 	if !ok {

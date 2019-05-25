@@ -59,5 +59,6 @@ type (
 type MsgLogger interface {
 	Debug(Msg)
 	Warn(Msg)
+	Error(Msg)
 	Fatal(Msg)
 }

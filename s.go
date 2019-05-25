@@ -3,7 +3,6 @@ package status
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gearboxworks/go-status/is"
 	"github.com/gearboxworks/go-status/only"
 	"log"
 	"strings"
@@ -49,29 +48,29 @@ func (me *S) Log() {
 		log.Fatal("status.Logger is nil")
 	}
 	for range only.Once {
-		if is.Error(me) {
-			Logger.Fatal(me.Message())
-			break
-		}
-		if is.Warn(me) {
-			Logger.Warn(me.Message())
-			break
-		}
 		if me == nil {
 			break
 		}
-		if is.Success(me) {
+		if IsError(me) {
+			Logger.Fatal(me.Message())
+			break
+		}
+		if IsWarn(me) {
+			Logger.Warn(me.Message())
+			break
+		}
+		if IsSuccess(me) {
 			Logger.Debug(me.Message())
 			break
 		}
 	}
 }
 
-func (me *S) IsWarning() bool {
+func (me *S) IsWarn() bool {
 	return me.warn
 }
 
-func (me *S) Warning() (w string) {
+func (me *S) Warn() (w string) {
 	for range only.Once {
 		w = ""
 		if !me.warn {
@@ -82,7 +81,7 @@ func (me *S) Warning() (w string) {
 	return w
 }
 
-func (me *S) SetWarning(bool) Status {
+func (me *S) SetWarn(bool) Status {
 	me.success = true
 	me.warn = true
 	return me

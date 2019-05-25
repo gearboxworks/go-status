@@ -58,6 +58,14 @@ func IsSuccess(err error) bool {
 	return !sts.IsError() || sts.HttpStatus() == 0
 }
 
+func IsWarn(err error) bool {
+	sts, ok := err.(Status)
+	if !ok {
+		return err == nil
+	}
+	return !sts.IsWarn()
+}
+
 func Wrap(err error, args ...*Args) Status {
 	var _args *Args
 	if len(args) == 0 || args[0] == nil {
@@ -96,7 +104,7 @@ func Fail(args ...*Args) Status {
 }
 
 func Warn(msg string, args ...interface{}) Status {
-	return Success(msg, args...).SetWarning(true)
+	return Success(msg, args...).SetWarn(true)
 }
 
 func YourBad(msg string, args ...interface{}) Status {

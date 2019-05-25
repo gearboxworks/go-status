@@ -20,7 +20,7 @@ type Status interface {
 	HttpStatus() int
 	IsError() bool
 	IsSuccess() bool
-	IsWarning() bool
+	IsWarn() bool
 	Message() string
 	SetCause(error) Status
 	SetData(interface{}) Status
@@ -31,8 +31,8 @@ type Status interface {
 	SetMessage(string, ...interface{}) Status
 	SetOtherHelp(HelpTypeMap) Status
 	SetSuccess(bool) Status
-	SetWarning(bool) Status
-	Warning() string
+	SetWarn(bool) Status
+	Warn() string
 }
 
 type Args struct {

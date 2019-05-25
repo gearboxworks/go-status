@@ -21,6 +21,7 @@ type Status interface {
 	IsError() bool
 	IsSuccess() bool
 	IsWarn() bool
+	Log()
 	Message() string
 	SetCause(error) Status
 	SetData(interface{}) Status

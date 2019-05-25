@@ -77,7 +77,7 @@ func IsWarn(err error) bool {
 	if !ok {
 		return err == nil
 	}
-	return !sts.IsWarn()
+	return sts.IsWarn()
 }
 
 func Wrap(err error, args ...*Args) Status {

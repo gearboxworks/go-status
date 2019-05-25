@@ -30,7 +30,7 @@ type Status interface {
 	SetErrorCode(int) Status
 	SetHelp(HelpType, string, ...interface{}) Status
 	SetHttpStatus(int) Status
-	SetLogTo(int)
+	SetLogTo(int) Status
 	SetMessage(string, ...interface{}) Status
 	SetOtherHelp(HelpTypeMap) Status
 	SetSuccess(bool) Status

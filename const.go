@@ -1,7 +1,9 @@
 package status
 
+type LogType = int
+
 const (
-	FatalLog = iota + 1
+	FatalLog LogType = iota + 1
 	ErrorLog
 	WarnLog
 	DebugLog

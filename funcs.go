@@ -8,17 +8,7 @@ import (
 )
 
 func Log(err error) {
-	for range only.Once {
-		if err == nil {
-			break
-		}
-		sts, ok := err.(Status)
-		if !ok {
-			Logger.Error(err.Error())
-			break
-		}
-		sts.Log()
-	}
+	Logger.Log(err)
 }
 
 func HttpStatus(err error) int {

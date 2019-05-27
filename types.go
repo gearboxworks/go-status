@@ -59,6 +59,7 @@ type (
 	Msg = string
 )
 type MsgLogger interface {
+	Log(error)
 	Debug(Msg)
 	Warn(Msg)
 	Error(Msg)

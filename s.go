@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gearboxworks/go-status/only"
-	"log"
 	"strings"
 )
 
@@ -45,41 +44,7 @@ func (me *S) GetFullDetails() (fd string) {
 }
 
 func (me *S) Log() {
-	if Logger == nil {
-		log.Fatal("status.Logger is nil")
-	}
-	for range only.Once {
-		if me == nil {
-			break
-		}
-		if me.logto == FatalLog {
-			Logger.Fatal(me.Message())
-		}
-		if me.logto == ErrorLog {
-			Logger.Error(me.Message())
-			break
-		}
-		if me.logto == WarnLog {
-			Logger.Warn(me.Message())
-			break
-		}
-		if me.logto == DebugLog {
-			Logger.Debug(me.Message())
-			break
-		}
-		if IsError(me) {
-			Logger.Error(me.Message())
-			break
-		}
-		if IsWarn(me) {
-			Logger.Warn(me.Message())
-			break
-		}
-		if IsSuccess(me) {
-			Logger.Debug(me.Message())
-			break
-		}
-	}
+	Logger.Log(me)
 }
 
 func (me *S) IsWarn() bool {

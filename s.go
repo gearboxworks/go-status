@@ -20,7 +20,7 @@ type S struct {
 	data       interface{}
 	help       HelpTypeMap
 	errorcode  int
-	logto      int
+	logas      int
 }
 
 func (me *S) GetFullDetails() (fd string) {
@@ -89,8 +89,8 @@ func (me *S) IsError() bool {
 	return !me.success
 }
 
-func (me *S) LogTo() int {
-	return me.logto
+func (me *S) LogAs() int {
+	return me.logas
 }
 
 func (me *S) Cause() error {
@@ -158,8 +158,8 @@ func (me *S) FullError() (err error) {
 	return fmt.Errorf(msg)
 }
 
-func (me *S) SetLogTo(logto int) Status {
-	me.logto = logto
+func (me *S) SetLogAs(logAs int) Status {
+	me.logas = logAs
 	return me
 }
 

@@ -22,7 +22,7 @@ type Status interface {
 	IsSuccess() bool
 	IsWarn() bool
 	Log()
-	LogTo() LogType
+	LogAs() LogType
 	Message() string
 	SetCause(error) Status
 	SetData(interface{}) Status
@@ -30,7 +30,7 @@ type Status interface {
 	SetErrorCode(int) Status
 	SetHelp(HelpType, string, ...interface{}) Status
 	SetHttpStatus(int) Status
-	SetLogTo(LogType) Status
+	SetLogAs(LogType) Status
 	SetMessage(string, ...interface{}) Status
 	SetOtherHelp(HelpTypeMap) Status
 	SetSuccess(bool) Status

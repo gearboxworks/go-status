@@ -48,18 +48,18 @@ func (me *L) Log(err error) {
 		if me == nil {
 			log.Fatal("status.Logger is nil\n")
 		}
-		if sts.LogTo() == FatalLog {
+		if sts.LogAs() == FatalLog {
 			Logger.Fatal(sts.Message())
 		}
-		if sts.LogTo() == ErrorLog {
+		if sts.LogAs() == ErrorLog {
 			Logger.Error(sts.Message())
 			break
 		}
-		if sts.LogTo() == WarnLog {
+		if sts.LogAs() == WarnLog {
 			Logger.Warn(sts.Message())
 			break
 		}
-		if sts.LogTo() == DebugLog {
+		if sts.LogAs() == DebugLog {
 			Logger.Debug(sts.Message())
 			break
 		}

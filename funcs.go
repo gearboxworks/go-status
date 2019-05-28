@@ -1,7 +1,7 @@
 package status
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
 	"github.com/gearboxworks/go-status/only"
 	"net/http"
@@ -125,50 +125,29 @@ func OurBad(msg string, args ...interface{}) Status {
 	})
 }
 
-func NewStatus(args *Args) (sts *S) {
-	for range only.Once {
-		sts = &S{
-			success:    args.Success,
-			message:    args.Message,
-			httpstatus: args.HttpStatus,
-			cause:      args.Cause,
-			data:       args.Data,
-			help: HelpTypeMap{
-				AllHelp: &args.Help,
-				ApiHelp: &args.ApiHelp,
-				CliHelp: &args.CliHelp,
-			},
-		}
-
-		if sts.message == "" && sts.cause != nil {
-			sts.message = sts.cause.Error()
-		}
-
-		if !sts.success && sts.cause == nil {
-			sts.cause = errors.New(sts.message)
-		}
-
-		if sts.httpstatus == 0 {
-			sts.httpstatus = http.StatusInternalServerError
-		}
-
-		if *sts.help[AllHelp] == "" {
-			help := ContactSupportHelp()
-			sts.help[AllHelp] = &help
-		}
-
-		if *sts.help[ApiHelp] == "" {
-			sts.help[ApiHelp] = sts.help[AllHelp]
-		}
-
-		if *sts.help[CliHelp] == "" {
-			sts.help[CliHelp] = sts.help[AllHelp]
-		}
-
-	}
-	return sts
-}
-
 func ContactSupportHelp() string {
 	return "contact support"
+}
+
+func ConvertStringMapToJson(psm PropertyStringMap) (js []byte) {
+	for range only.Once {
+		var err error
+		js, err = json.Marshal(psm)
+		if err == nil {
+			break
+		}
+		js = ConvertErrorToJson(err, "property string map")
+	}
+	return js
+}
+
+func ConvertErrorToJson(err error, what string) (js []byte) {
+	js, err = json.Marshal(err)
+	if err != nil {
+		js, _ = json.Marshal(errObj{
+			Error: "cannot unmarshal " + what,
+			Cause: err.Error(),
+		})
+	}
+	return js
 }

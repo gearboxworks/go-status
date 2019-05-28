@@ -1,20 +1,16 @@
 package status
 
-type jsonS struct {
-	Message string      `json:"message"`
-	Help    string      `json:"help,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
-}
+type PropertyStringMap map[Property]string
+type Property = string
 
 type Status interface {
 	Cause() error
 	Data() interface{}
-	Additional() string
+	Details() string
 	Error() string
 	ErrorCode() int
-	FullError() error
-	GetFullDetails() string
-	GetFullMessage() string
+	FullText() string
+	FullTextError() error
 	GetHelp(HelpType) string
 	Help() string
 	HttpStatus() int
@@ -23,10 +19,13 @@ type Status interface {
 	IsWarn() bool
 	Log()
 	LogAs() LogType
+	LongError() error
+	LongFullText() string
+	LongMessage() string
 	Message() string
 	SetCause(error) Status
 	SetData(interface{}) Status
-	SetAdditional(string, ...interface{}) Status
+	SetDetails(string, ...interface{}) Status
 	SetErrorCode(int) Status
 	SetHelp(HelpType, string, ...interface{}) Status
 	SetHttpStatus(int) Status
@@ -35,6 +34,7 @@ type Status interface {
 	SetOtherHelp(HelpTypeMap) Status
 	SetSuccess(bool) Status
 	SetWarn(bool) Status
+	PropertyStringMap() PropertyStringMap
 	Warn() string
 }
 
@@ -64,4 +64,9 @@ type MsgLogger interface {
 	Warn(Msg)
 	Error(Msg)
 	Fatal(Msg)
+}
+
+type errObj struct {
+	Error string `json:"error"`
+	Cause string `json:"cause"`
 }

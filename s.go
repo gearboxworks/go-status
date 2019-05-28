@@ -125,7 +125,7 @@ func (me *S) Message() string {
 	return me.message
 }
 
-func (me *S) Details() string {
+func (me *S) Detail() string {
 	return me.details
 }
 
@@ -313,7 +313,7 @@ func (me *S) SetMessage(msg string, args ...interface{}) Status {
 	return me
 }
 
-func (me *S) SetDetails(details string, args ...interface{}) Status {
+func (me *S) SetDetail(details string, args ...interface{}) Status {
 	me.details = fmt.Sprintf(details, args...)
 	return me
 }

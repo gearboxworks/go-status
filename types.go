@@ -6,7 +6,7 @@ type Property = string
 type Status interface {
 	Cause() error
 	Data() interface{}
-	Details() string
+	Detail() string
 	Error() string
 	ErrorCode() int
 	FullText() string
@@ -25,7 +25,7 @@ type Status interface {
 	Message() string
 	SetCause(error) Status
 	SetData(interface{}) Status
-	SetDetails(string, ...interface{}) Status
+	SetDetail(string, ...interface{}) Status
 	SetErrorCode(int) Status
 	SetHelp(HelpType, string, ...interface{}) Status
 	SetHttpStatus(int) Status

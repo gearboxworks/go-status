@@ -23,7 +23,11 @@ type Status interface {
 	LongFullText() string
 	LongMessage() string
 	Message() string
+	PropertyStringMap() PropertyStringMap
+	SetAllHelp(string, ...interface{}) Status
+	SetApiHelp(string, ...interface{}) Status
 	SetCause(error) Status
+	SetCliHelp(string, ...interface{}) Status
 	SetData(interface{}) Status
 	SetDetail(string, ...interface{}) Status
 	SetErrorCode(int) Status
@@ -34,7 +38,6 @@ type Status interface {
 	SetOtherHelp(HelpTypeMap) Status
 	SetSuccess(bool) Status
 	SetWarn(bool) Status
-	PropertyStringMap() PropertyStringMap
 	Warn() string
 }
 

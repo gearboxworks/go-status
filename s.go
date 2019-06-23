@@ -176,12 +176,16 @@ func (me *S) LongMessage() (lm string) {
 		if me.cause == nil {
 			break
 		}
+		var msg string
 		sts, ok := me.cause.(Status)
 		if !ok {
-			lm = fmt.Sprintf("%s; %s", lm, me.cause.Error())
-			break
+			msg = me.cause.Error()
+		} else {
+			msg = sts.LongMessage()
 		}
-		lm = fmt.Sprintf("%s; %s", lm, sts.LongMessage())
+		if msg != "" {
+			lm = fmt.Sprintf("%s; %s", lm, msg)
+		}
 	}
 	return lm
 }
@@ -192,11 +196,16 @@ func (me *S) LongFullText() (lft string) {
 		if me.cause == nil {
 			break
 		}
+		var msg string
 		sts, ok := me.cause.(Status)
 		if !ok {
-			lft = fmt.Sprintf("%s; %s", lft, me.cause.Error())
+			msg = me.cause.Error()
+		} else {
+			msg = sts.LongFullText()
 		}
-		lft = fmt.Sprintf("%s; %s", lft, sts.LongFullText())
+		if msg != "" {
+			lft = fmt.Sprintf("%s; %s", lft, msg)
+		}
 	}
 	return lft
 }

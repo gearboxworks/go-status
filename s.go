@@ -359,13 +359,13 @@ func (me *S) SetHelp(helptype HelpType, help string, args ...interface{}) Status
 }
 
 func (me *S) SetAllHelp(help string, args ...interface{}) Status {
-	return me.SetHelp(AllHelp, help, args)
+	return me.SetHelp(AllHelp, help, args...)
 }
 
 func (me *S) SetApiHelp(help string, args ...interface{}) Status {
-	return me.SetHelp(CliHelp, help, args)
+	return me.SetHelp(CliHelp, help, args...)
 }
 
 func (me *S) SetCliHelp(help string, args ...interface{}) Status {
-	return me.SetHelp(CliHelp, help, args)
+	return me.SetHelp(CliHelp, help, args...)
 }

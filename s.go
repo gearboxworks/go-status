@@ -179,6 +179,7 @@ func (me *S) LongMessage() (lm string) {
 		sts, ok := me.cause.(Status)
 		if !ok {
 			lm = fmt.Sprintf("%s; %s", lm, me.cause.Error())
+			break
 		}
 		lm = fmt.Sprintf("%s; %s", lm, sts.LongMessage())
 	}
